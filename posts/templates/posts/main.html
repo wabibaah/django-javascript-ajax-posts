@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} if you don't load static you can't load the js file  {% endcomment %}
+{% block scripts %} 
+  <script src="{% static 'posts/main.js' %}" defer ></script>
+{% endblock scripts %} 
+{% block title %} 
+  all the posts
+{%endblock title %} 
+{% block content %} 
+  {% comment %} {% for obj in qs %}
+    {{obj.title}} - {{obj.body}} 
+    <br>
+  {% endfor %} {% endcomment %}
+  {% comment %} <div id="hello-world" class='mt-5'></div>
+  <div id="hello-ajax" class='mt-5'></div> {% endcomment %}
+  <div id="posts-box"></div>
+{% endblock content %}
