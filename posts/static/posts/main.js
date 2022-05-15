@@ -13,9 +13,12 @@ const title = document.getElementById("id_title");
 const body = document.getElementById("id_body");
 const csrf = document.getElementsByName("csrfmiddlewaretoken");
 
+// console.log(window.location);
+const url = window.location.href;
+
 const alertBox = document.getElementById("alert-box");
 
-console.log("csrf value: ", csrf[0].value);
+// console.log("csrf value: ", csrf[0].value);
 
 // helloWorldBox.innerHTML = "Kworku vi <b>abba</b>";
 
@@ -112,7 +115,7 @@ const getData = () => {
             <div class="card-footer">
               <div class="row">
                 <div class="col-2">
-                  <a href="#" class="btn btn-primary">Details</a>
+                  <a href="${url}${el.id}" class="btn btn-primary">Details</a>
                 </div>
                 <div class="col-2">
                   <form class="like-unlike-forms" data-form-id="${el.id}">
@@ -174,7 +177,7 @@ postForm.addEventListener("submit", (e) => {
     <div class="card-footer">
       <div class="row">
         <div class="col-2">
-          <a href="#" class="btn btn-primary">Details</a>
+          <a href="${response.id}/" class="btn btn-primary">Details</a>
         </div>
         <div class="col-2">
           <form class="like-unlike-forms" data-form-id="${response.id}">
