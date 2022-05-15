@@ -90,3 +90,24 @@ updateForm.addEventListener("submit", (e) => {
     },
   });
 });
+
+deleteForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  $.ajax({
+    type: "POST",
+    url: deleteUrl,
+    data: {
+      csrfmiddlewaretoken: csrf[0].value,
+      // the view will know which to delete through the url send to the view (it will be an instance of the id in the url)
+    },
+    success: function (response) {
+      // there is no response here sent by the view because it is deleting
+      window.location.href = window.location.origin;
+      localStorage.setItem("title", titleInput.value);
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+});
