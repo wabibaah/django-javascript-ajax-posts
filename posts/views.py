@@ -1,39 +1,62 @@
 
 from django.shortcuts import render
 from . models import Post
+from . forms import PostForm
+from profiles.models import Profile
 from django.http import JsonResponse
 # from django.core import serializers
 
 # Create your views here.
 
 def post_list_and_create(request):
-  qs = Post.objects.all()
+  form = PostForm(request.POST or None)
+  # qs = Post.objects.all()  ### now we are using ajax request so we don't need this anymore
+
+  if request.is_ajax():
+    if form.is_valid():
+      author = Profile.objects.get(user=request.user)
+      instance = form.save(commit=False)
+      # we cannot save the form yet, without the author who created it, so commit = False
+      instance.author = author
+      # this is to make sure the author really has a profile, because we could have just set it to request.user
+      instance.save()
+
+      return JsonResponse({
+        'title': instance.title,
+        'body': instance.body,
+        'author': instance.author.user.username,
+        'id': instance.id,
+      })
+
   cxt = {
-    'qs': qs
+    # 'qs': qs,
+    'form': form,
   }
   return render(request, 'posts/main.html', cxt )
 
 def load_posts_data_view(request, num_posts):
-  visible = 3
-  upper = num_posts
-  lower = upper  - visible
-  size = Post.objects.all().count()
+  if request.is_ajax():
+    visible = 3
+    upper = num_posts
+    lower = upper  - visible
+    size = Post.objects.all().count()
 
-  qs = Post.objects.all()
-  # data = serializers.serialize("json", qs)
-  data = []
-  for post in qs:
-    item = {
-      "id": post.id,
-      "title": post.title,
-      "body": post.body,
-      "liked": True if request.user in post.liked.all() else False,
-      "count": post.like_count,
-      "author": post.author.user.username
-    }
-    data.append(item)
-  # print(data)
-  return JsonResponse({'data': data[lower:upper], 'size': size})
+    qs = Post.objects.all()
+    # data = serializers.serialize("json", qs)
+    data = []
+    for post in qs:
+      item = {
+        "id": post.id,
+        "title": post.title,
+        "body": post.body,
+        "liked": True if request.user in post.liked.all() else False,
+        "count": post.like_count,
+        "author": post.author.user.username
+      }
+      data.append(item)
+    # print(data)
+    return JsonResponse({'data': data[lower:upper], 'size': size})
+
 
 
 def like_unlike_posts(request):
