@@ -10,6 +10,9 @@ const postBox = document.getElementById("post-box");
 const updateBtn = document.getElementById("update-btn");
 const deleteBtn = document.getElementById("delete-btn");
 
+const titleInput = document.getElementById("id_title");
+const bodyInput = document.getElementById("id_body");
+
 backBtn.addEventListener("click", () => {
   history.back();
 });
@@ -39,6 +42,10 @@ $.ajax({
 
     postBox.appendChild(titleEl);
     postBox.appendChild(bodyEl);
+
+    titleInput.value = data.title;
+    bodyInput.value = data.body;
+
     spinnerBox.classList.add("not-visible");
   },
   error: function (error) {
